@@ -181,6 +181,161 @@ Component "conference.jitmeet.example.com" "muc"
     modules_enabled = { "token_verification" }
 ```
 
++ Also to access the data in lib-jitsi-meet you have to enable the prosody module mod_presence_identity in your config.
+
+```
+VirtualHost "YOUR_DOMAIN"
+
+    modules_enabled = { "presence_identity" }
+```
+
++ Finally Setup the guest domain
+
+```
+VirtualHost "guest.YOUR_DOMAIN"
+
+    authentication = "token";
+
+    app_id = "YOUR_APP_ID";
+
+    app_secret = "YOUR_SECRET";
+
+    c2s_require_encryption = true;
+
+    allow_empty_token = true;
+```
+
+#### Setup jitsi-meet config
+
+
+Open /etc/jitsi/meet/YOUR_DOMAIN-config.js 
+
+```
+var config = {
+
+    hosts: {
+
+        ... 
+
+        // When using authentication, domain for guest users.
+
+        anonymousdomain: 'guest.jitmeet.example.com',
+
+        ...
+
+    },
+
+    ...
+
+    enableUserRolesBasedOnToken: true,
+
+    ...
+
+}
+```
+
+
+#### JICOFO Configuration
+
+Set following config in /etc/jitsi/jicofo/config as:
+
+```
+JICOFO_HOST=YOUR_DOMAIN
+
+```
+
+#### VideoBridge Configuration
+
+Edit /etc/jitsi/videobridge/config file as:
+
+```
+JVB_HOST=YOUR_DOMAIN
+```
+
+
+
+
+
+
+#### Restart All Services
+
+```
+systemctl restart prosody jicofo jitsi-videobridge2
+```
+
+You should not be able to create a meeting now without passing a JWT Token
+
+
+#### TESTING
+
+Goto [jwt.io](jwt.io) and then go to the Debugger
+
+> Payload
+
+```
+{
+
+  "aud": "<YOUR_AUDIENCE> cheappr_aud",
+
+  "iss": "<YOUR_ISSUER> cheappr",// APP ID
+  "sub": "<YOUR_JITSI_DOMAIN> cheappr.io",
+
+  "room": "*"
+
+}
+```
+
+Now you can create a room like so
+
+> cheappr.io/<room_name>?jwt=<your token>
+
+
+### Logs
+
+> Prosody Logs
+
+```
+tail -f -n 200 /var/log/prosody/prosody.log
+
+```
+
+
+> Jicofo Logs
+
+```
+tail -f -n 200 /var/log/jitsi/jicofo.log
+
+```
+
+> JVB Logs
+
+```
+tail -f -n 200 /var/log/jitsi/jvb.log
+
+```
+
+### Issues
+
++ Jitsi meet restarts and cannot connect to server
+
+> Prosody Logs Shows error
+
+```
+Traceback[c2s]: /usr/lib/prosody/modules/mod_posix.lua:123: bad argument #3 to 'format' (string expected, got nil)
+```
+
+***
+Hi there, I was able to get it to work by downloading another version of mod_posix.lua. This is what I’ve done. service prosody stop cd /usr/lib/prosody/modules mv mod_posix.lua mod_posix.old wget https://raw.githubusercontent.com/bjc/prosody/master/plugins/mod_posix.lua service prosody start And now it works. I hope this helps you too.
+*** 
+
+> /usr/lib/prosody/util/cache.lua:66: table index is ni
+
+
+```
+O I see it is trunk 747. What, do you have some muc components in your config which is without defined storage? They need to be with storage = "null". Same as the default one https://github.com/jitsi/jitsi-meet/blob/master/doc/debian/jitsi-meet-prosody/prosody.cfg.lua-jvb.example#L28 315```
+
+
+### TESTING
 
 
 
