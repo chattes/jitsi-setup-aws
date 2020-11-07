@@ -3,7 +3,7 @@ Jitsi Meet Server Setup with JWT Authentication
 
 ## Jitsi Server Setup in AWS
 
-### Prerequisite for Setup
+## Prerequisite for Setup
 
 * We will be setting up in Ubuntu 18.04
 * We need a FQDN and an Elastic IP associated with the EC2 Instance
