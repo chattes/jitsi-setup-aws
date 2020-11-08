@@ -157,6 +157,17 @@ c2s_require_encryption=false
 
 Open `/etc/prosody/conf.avail/YOUR_DOMAIN.cfg.lua`
 
++ Add after admins object
+
+```
+admins = {}
+
+component_ports = { 5347 }
+
+component_interface = "0.0.0.0"
+
+```
+
 + Set the plugins path `plugin_paths = { "/usr/share/jitsi-meet/prosody-plugins/" }`
 + Also optionally set the global settings for key authorization. Both these options default to the '*' parameter which means accept any issuer or audience string in incoming tokens, we us this when generating the JWT Tokens
 ```
@@ -335,7 +346,10 @@ Hi there, I was able to get it to work by downloading another version of mod_pos
 O I see it is trunk 747. What, do you have some muc components in your config which is without defined storage? They need to be with storage = "null". Same as the default one https://github.com/jitsi/jitsi-meet/blob/master/doc/debian/jitsi-meet-prosody/prosody.cfg.lua-jvb.example#L28 315```
 
 
-### TESTING
+### Scalable Setup and Further Reading
+
+[https://github.com/jitsi/handbook/blob/master/docs/devops-guide/scalable.md](https://github.com/jitsi/handbook/blob/master/docs/devops-guide/scalable.md)
+
 
 
 
