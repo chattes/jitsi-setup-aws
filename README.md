@@ -351,5 +351,6 @@ O I see it is trunk 747. What, do you have some muc components in your config wh
 [https://github.com/jitsi/handbook/blob/master/docs/devops-guide/scalable.md](https://github.com/jitsi/handbook/blob/master/docs/devops-guide/scalable.md)
 
 
+[Example Confog Files](https://github.com/jitsi/jitsi-meet/tree/master/doc/example-config-files/scalable)
 
 
